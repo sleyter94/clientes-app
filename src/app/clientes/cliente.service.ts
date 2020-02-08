@@ -42,7 +42,7 @@ export class ClienteService {
     );
   }
 
-  create(cliente: Cliente): Observable<Cliente> {
+  create(cliente: Cliente): Observable<any> {
       return this.http.post<Cliente>(this.urlEndpoint, cliente, {headers: this.httpHeaders})
       .pipe(
         catchError(e => {
@@ -68,7 +68,7 @@ export class ClienteService {
     );
   }
 
-  update(cliente: Cliente): Observable<Cliente> {
+  update(cliente: Cliente): Observable<any> {
     return this.http.put<Cliente>(`${this.urlEndpoint}/${cliente.id}`, cliente, {headers: this.httpHeaders});
   }
 
