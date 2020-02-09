@@ -1,13 +1,14 @@
 import { Cliente } from './cliente';
 
 
-export const CLIENTES: Cliente[] = [
+export const CLIENTES: any[] = [
   {
     "id": 0,
     "nombre": "Little",
     "apellido": "Summers",
     "createAt": "2019-10-09T04:36:32 +05:00",
-    "email": "littlesummers@blurrybus.com"
+    "email": "littlesummers@blurrybus.com",
+    foto:''
   },
   {
     "id": 1,

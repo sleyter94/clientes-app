@@ -1,0 +1,14 @@
+<div class="card bg-dark text-white">
+  <div class="card-header">Detalle del cliente</div>
+  <div class="card-body">
+    <div class="input-group">
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" (change) = "seleccionarFoto($event)">
+        <label for="" class="custom-file-label">Subir Foto</label>
+      </div>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" (click)="subirFoto()">Subir</button>
+      </div>
+    </div>
+  </div>
+</div>
