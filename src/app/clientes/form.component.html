@@ -49,7 +49,9 @@
       <div class="form-group row">
         <label for="createAt" class="col-form-label col-sm-2">Fecha</label>
         <div class="col-sm-6">
-          <input type="date" class="form-control" [(ngModel)] = "cliente.createAt" name="createAt" #createAt="ngModel">
+          <input [matDatepicker]="myDatepicker"  class="form-control" [(ngModel)] = "cliente.createAt" name="createAt" #createAt="ngModel" style="display: inline;width: 90%;">
+          <mat-datepicker-toggle [for]="myDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #myDatepicker></mat-datepicker>
           <div *ngIf="createAt.invalid && (createAt.dirty || createAt.touched)" class="alert alert-danger">
             <div *ngIf="createAt.errors.required">
               Fecha es requerido

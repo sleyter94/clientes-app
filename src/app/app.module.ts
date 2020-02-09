@@ -16,6 +16,8 @@ import localeES from '@angular/common/locales/es-PE';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {MatDatepickerModule} from '@angular/material';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
 registerLocaleData(localeES, 'es');
 
 const routes: Routes = [
@@ -42,7 +44,9 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatMomentDateModule
   ],
   providers: [ClienteService, {provide: LOCALE_ID, useValue: 'es-PE'}],
   bootstrap: [AppComponent]
