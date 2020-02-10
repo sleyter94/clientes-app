@@ -13,7 +13,7 @@ import { HttpEventType } from '@angular/common/http';
 export class DetalleComponent implements OnInit {
   cliente: Cliente;
   fotoSeleccionada: File;
-  progreso: number = 0;
+  progreso = 0;
   constructor(private clienteService: ClienteService, private activateRoute: ActivatedRoute) { }
 
   ngOnInit() {
@@ -28,7 +28,7 @@ export class DetalleComponent implements OnInit {
     });
   }
 
-  seleccionarFoto(event){
+  seleccionarFoto(event) {
     this.fotoSeleccionada = event.target.files[0];
     console.log(this.fotoSeleccionada);
     this.progreso = 0;

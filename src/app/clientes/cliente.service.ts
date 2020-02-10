@@ -28,9 +28,6 @@ export class ClienteService {
       map((response: any) => {
         (response.content as Cliente[]).map(cli => {
           cli.nombre = cli.nombre.toUpperCase();
-          let datePipe = new DatePipe('es');
-          //cli.createAt = formatDate(cli.createAt, 'dd/MM/yyyy', 'en-US');
-          //cli.createAt = datePipe.transform(cli.createAt, 'EEEE dd, MMMM yyyy');
           return cli;
         });
         return response;
@@ -58,7 +55,7 @@ export class ClienteService {
       );
   }
 
-  getCliente(id): Observable<Cliente>{
+  getCliente(id): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.urlEndpoint}/${id}`).pipe(
       catchError(e => {
         this.router.navigate(['/clientes']);
@@ -76,11 +73,11 @@ export class ClienteService {
     return this.http.delete<Cliente>(`${this.urlEndpoint}/${id}`, {headers: this.httpHeaders});
   }
 
-  subirFoto(archivo: File, id): Observable<HttpEvent<{}>>{
-    let formData = new FormData();
+  subirFoto(archivo: File, id): Observable<HttpEvent<{}>> {
+    const formData = new FormData();
     formData.append('archivo', archivo);
     formData.append('id', id);
-    const req = new HttpRequest('POST', `${this.urlEndpoint}/upload`, formData,{
+    const req = new HttpRequest('POST', `${this.urlEndpoint}/upload`, formData, {
       reportProgress: true
     });
 
