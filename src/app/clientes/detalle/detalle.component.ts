@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
+import { ModalService } from './modal.service';
 
 @Component({
   selector: 'detalle-cliente',
@@ -11,22 +12,12 @@ import { HttpEventType } from '@angular/common/http';
   styleUrls: ['./detalle.component.css']
 })
 export class DetalleComponent implements OnInit {
-  cliente: Cliente;
+  @Input() cliente: Cliente;
   fotoSeleccionada: File;
   progreso = 0;
-  constructor(private clienteService: ClienteService, private activateRoute: ActivatedRoute) { }
+  constructor(private clienteService: ClienteService, private modalService: ModalService) { }
 
-  ngOnInit() {
-    this.activateRoute.paramMap.subscribe(params => {
-      const id: number = +params.get('id');
-      if (id) {
-        this.clienteService.getCliente(id).subscribe(cliente => {
-          this.cliente = cliente;
-        });
-
-      }
-    });
-  }
+  ngOnInit() {}
 
   seleccionarFoto(event) {
     this.fotoSeleccionada = event.target.files[0];
@@ -49,11 +40,18 @@ export class DetalleComponent implements OnInit {
       } else if (event.type === HttpEventType.Response) {
         const response: any = event.body;
         this.cliente = response.cliente as Cliente;
+        this.modalService.notificarUpload.emit(this.cliente);
         Swal.fire('La foto se ha subido completamente', `La foto se ha subido con éxito:  ${this.cliente.foto}`, 'success');
       }
 
     });
     }
+  }
+
+  cerrarModal(){
+    this.modalService.cerrarModal();
+    this.fotoSeleccionada = null;
+    this.progreso = 0;
   }
 
 }
