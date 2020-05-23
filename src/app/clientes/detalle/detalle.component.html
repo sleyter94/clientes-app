@@ -19,7 +19,7 @@
                   <li class="list-group-item">{{cliente?.createAt | date:"fullDate"}}</li>
                   <li class="list-group-item">{{cliente?.region.nombre}}</li>
                 </ul>
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" *ngIf="authService.hasRole('ROLE_ADMIN')">
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" (change) = "seleccionarFoto($event)">
                     <label for="" class="custom-file-label">Subir Foto</label>
@@ -37,6 +37,37 @@
               <div class="col-sm">
                 <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{cliente?.foto}}" class="img-thumbnail rounded" alt="">
               </div>
+            </div>
+            <div class="row">
+              <button class="btn btn-success btn-sm" [routerLink]="['/facturas/form',cliente.id]">Crear Factura</button>
+            </div>
+            <div class="row">
+              <div *ngIf="cliente.facturas.length == 0" class="alert alert-info my-4">
+                No hay facturas del cliente {{cliente.nombre}} {{cliente.apellido}}
+              </div>
+              <table class="table table-bordered table-striped my-4"
+               *ngIf="cliente.facturas.length > 0">
+                <thead>
+                  <tr>
+                    <th>Folio</th>
+                    <th>Descripcion</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>detalle</th>
+                    <th>eliminar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let factura of cliente.facturas">
+                    <td>{{factura.id}}</td>
+                    <td>{{factura.descripcion}}</td>
+                    <td>{{factura.createAt}}</td>
+                    <td>{{factura.total}}</td>
+                    <td><button class="btn btn-primary btn-sm" [routerLink] = "['/facturas', factura.id]">ver</button></td>
+                    <td><button class="btn btn-danger btn-sm" (click)="delete(factura)">eliminar</button></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

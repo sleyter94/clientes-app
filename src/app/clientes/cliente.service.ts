@@ -10,18 +10,29 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Region } from './region';
+import { AuthService } from '../usuarios/auth.service';
 
 @Injectable()
 export class ClienteService {
 
   private urlEndpoint = 'http://localhost:8080/api/clientes';
-  private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router,
+    private authService: AuthService) { }
+
 
   private isNoAutorizado(e): boolean {
-    if ( e.status === 401 || e.status === 403) {
+    if ( e.status === 401) {
+
+      if (this.authService.isAuthenticated()) {
+        this.authService.logout();
+      }
       this.router.navigate(['/login']);
+      return true;
+    }
+    if (e.status === 403) {
+      Swal.fire('Acceso Denegado', `Hola ${this.authService.usuario.username} no tienes acceso a este recurso`, 'warning');
+      this.router.navigate(['/clientes']);
       return true;
     }
     return false;
@@ -57,7 +68,7 @@ export class ClienteService {
   }
 
   create(cliente: Cliente): Observable<any> {
-      return this.http.post<Cliente>(this.urlEndpoint, cliente, {headers: this.httpHeaders})
+      return this.http.post<Cliente>(this.urlEndpoint, cliente)
       .pipe(
         catchError(e => {
 
@@ -91,7 +102,7 @@ export class ClienteService {
   }
 
   update(cliente: Cliente): Observable<any> {
-    return this.http.put<Cliente>(`${this.urlEndpoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.put<Cliente>(`${this.urlEndpoint}/${cliente.id}`, cliente).pipe(
       catchError(e => {
         if (this.isNoAutorizado(e)) {
           return throwError(e);
@@ -109,7 +120,7 @@ export class ClienteService {
   }
 
   delete(id: number): Observable<Cliente> {
-    return this.http.delete<Cliente>(`${this.urlEndpoint}/${id}`, {headers: this.httpHeaders}).pipe(
+    return this.http.delete<Cliente>(`${this.urlEndpoint}/${id}`).pipe(
       catchError(e => {
         if (this.isNoAutorizado(e)) {
           return throwError(e);
@@ -130,8 +141,15 @@ export class ClienteService {
     const formData = new FormData();
     formData.append('archivo', archivo);
     formData.append('id', id);
+    let httpHeaders = new HttpHeaders();
+    const token = this.authService.token;
+    if (token != null) {
+      httpHeaders = httpHeaders.append('Authorization', 'Bearer ' + token);
+    }
+
     const req = new HttpRequest('POST', `${this.urlEndpoint}/upload`, formData, {
-      reportProgress: true
+      reportProgress: true,
+      headers: httpHeaders
     });
 
     return this.http.request(req).pipe(
